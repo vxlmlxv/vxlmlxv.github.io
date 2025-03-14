@@ -10,13 +10,13 @@
   },
   "title": "I'm Yeseul Lee",
   "subtitle": {
-    "prefix": "I make things to ",
-    "highlight": "give an impact",
+    "prefix": "I love learning ",
+    "highlight": "new things",
     "suffix": "."
   },
   "description" : "",
   "socialProfiles": {
-    "from": ["LinkedIn", "Medium", "Github", "Mail"],
+    "from": [ "Github", "Mail"],
     "showIcons": true
   }
 }
