@@ -1,12 +1,12 @@
 {
   "intro": "Hi",
   "heroPhoto": {
-    "src": "../../images/lego-dummy.png",
-    "alt": "My Photo"
+    "src": "../../images/memoticon.png",
+    "alt": "Memotion"
   },
   "image": {
-    "src": "../../images/memoticon.png",
-    "alt": "Memoticon"
+    "src": "../../images/waving-hand.png",
+    "alt": "Waving hand emoji"
   },
   "title": "I'm Yeseul Lee",
   "subtitle": {
