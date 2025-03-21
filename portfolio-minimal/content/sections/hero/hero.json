@@ -5,8 +5,8 @@
     "alt": "My Photo"
   },
   "image": {
-    "src": "../../images/waving-hand.png",
-    "alt": "Waving Hand Emoji"
+    "src": "../../images/memoticon.png",
+    "alt": "Memoticon"
   },
   "title": "I'm Yeseul Lee",
   "subtitle": {
@@ -16,7 +16,7 @@
   },
   "description" : "",
   "socialProfiles": {
-    "from": [ "Github", "Mail"],
+    "from": [ "Github", "Mail", "Instagram"],
     "showIcons": true
   }
 }

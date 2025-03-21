@@ -1,7 +1,7 @@
 {
   "projects": [
     {
-      "visible": true,
+      "visible": false,
       "category": "🕹️ EASY AND QUICK SETUP",
       "title": "Add content and deploy!",
       "description": "Get up and running within minutes. Just install the starter, add your content, deploy it, and there you go! This starter works seamlessly with hosts like Netlify. Photo by Clément H on Unsplash.",

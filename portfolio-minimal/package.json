@@ -16,9 +16,12 @@
     "ajv-keywords": "^5.1.0",
     "gatsby": "^5.14.1",
     "gatsby-core-utils": "^4.14.0",
+    "gatsby-plugin-sharp": "^5.14.0",
+    "gatsby-remark-images": "^7.14.0",
     "gatsby-theme-portfolio-minimal": "^4.6.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-rotating-text": "^1.4.1",
     "sass-embedded": "^1.85.1"
   },
   "author": "Yeseul Lee <vxlmlxv@gmail.com>",
