@@ -1,0 +1,1316 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello, World | Creative Portfolio</title>
+
+    <!-- Fonts: Inter/Playfair for English, Noto Sans/Serif KR for Korean -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+
+    <style>
+      :root {
+        --bg-color: #0d0816;
+        --text-main: #e8e6d9;
+        --accent: #b8a2ff;
+        --cursor-size: 20px;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        margin: 0;
+        overflow-x: hidden;
+        font-family: "Inter", sans-serif;
+        cursor: none;
+      }
+
+      /* Typography Override for Korean Support */
+      .font-serif {
+        font-family: "Playfair Display", serif;
+      }
+
+      /* Korean State Classes */
+      body.lang-ko {
+        font-family: "Noto Sans KR", sans-serif;
+      }
+
+      body.lang-ko .font-serif {
+        font-family: "Noto Serif KR", serif;
+      }
+
+      /* Adjust line-height for Korean to maintain "weighty" feel */
+      body.lang-ko p {
+        line-height: 1.8;
+      }
+
+      /* Canvas Background */
+      #webgl-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: -1;
+        opacity: 0; /* Fade in on load */
+        transition: opacity 1.5s ease;
+        pointer-events: none;
+      }
+
+      /* Custom Cursor */
+      .cursor-dot,
+      .cursor-outline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: 9999;
+        pointer-events: none;
+      }
+
+      .cursor-dot {
+        width: 8px;
+        height: 8px;
+        background-color: var(--text-main);
+      }
+
+      .cursor-outline {
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(232, 230, 217, 0.5);
+        transition:
+          width 0.2s,
+          height 0.2s,
+          background-color 0.2s;
+      }
+
+      body.hovering .cursor-outline {
+        width: 60px;
+        height: 60px;
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(2px);
+        border-color: transparent;
+      }
+
+      /* Loader */
+      .loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--bg-color);
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .loader-text {
+        font-family: "Playfair Display", serif;
+        font-size: 2rem;
+        overflow: hidden;
+      }
+
+      /* Hero Typography */
+      .hero-line {
+        overflow: hidden;
+        display: block;
+      }
+
+      .hero-line span {
+        display: block;
+        transform: translateY(100%);
+      }
+
+      /* Project Hover Reveal */
+      .project-preview {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8);
+        width: 40vw;
+        height: 50vh;
+        z-index: 10;
+        opacity: 0;
+        pointer-events: none;
+        background-size: cover;
+        background-position: center;
+        transition:
+          opacity 0.4s ease,
+          transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        filter: grayscale(100%) contrast(120%);
+      }
+
+      .biome-item {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition:
+          padding-left 0.3s ease,
+          opacity 0.3s;
+      }
+
+      .biome-item:hover {
+        padding-left: 20px;
+        opacity: 1 !important;
+      }
+
+      .biome-list:hover .biome-item {
+        opacity: 0.3;
+      }
+
+      /* Smooth scrolling container */
+      .smooth-wrapper {
+        width: 100%;
+      }
+
+      /* Utilities */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .blend-difference {
+        mix-blend-mode: difference;
+      }
+
+      /* View Transitions */
+      .view-section {
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      #view-category {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: var(--bg-color);
+        z-index: 100;
+        overflow-y: auto;
+        visibility: hidden;
+        opacity: 0;
+      }
+
+      .category-project-card {
+        transition:
+          transform 0.3s ease,
+          background-color 0.3s ease;
+      }
+      .category-project-card:hover {
+        transform: translateY(-5px);
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+    </style>
+  </head>
+  <body class="lang-en">
+    <!-- Loader -->
+    <div class="loader">
+      <div class="loader-text">
+        <span>System.init( )</span>
+      </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- 3D Background -->
+    <div id="webgl-container"></div>
+
+    <!-- Project Preview Image Container (For Home Hover) -->
+    <div class="project-preview" id="project-preview"></div>
+
+    <!-- Navigation (Global) -->
+    <nav
+      class="fixed top-0 w-full p-8 flex justify-between items-center z-[200] mix-blend-difference text-white"
+    >
+      <div class="flex items-center gap-6">
+        <div
+          class="text-sm font-bold tracking-widest uppercase hoverable cursor-pointer"
+          onclick="backToHome()"
+        >
+          Dev.Portfolio
+        </div>
+        <!-- Language Toggle -->
+        <button
+          id="lang-toggle"
+          onclick="toggleLanguage()"
+          class="text-xs border border-white/30 px-3 py-1 rounded-full hover:bg-white hover:text-black transition-all hoverable"
+        >
+          EN
+        </button>
+      </div>
+
+      <div class="hidden md:flex gap-8 text-sm uppercase tracking-widest">
+        <a
+          href="#"
+          onclick="
+            backToHome();
+            scrollToId('about');
+            return false;
+          "
+          class="hoverable hover:text-purple-300 transition-colors"
+          data-i18n="nav_manifesto"
+          >Manifesto</a
+        >
+        <a
+          href="#"
+          onclick="
+            backToHome();
+            scrollToId('biomes');
+            return false;
+          "
+          class="hoverable hover:text-purple-300 transition-colors"
+          data-i18n="nav_biomes"
+          >Biomes</a
+        >
+        <a
+          href="#"
+          onclick="
+            backToHome();
+            scrollToId('contact');
+            return false;
+          "
+          class="hoverable hover:text-purple-300 transition-colors"
+          data-i18n="nav_connect"
+          >Connect</a
+        >
+      </div>
+      <div class="md:hidden text-2xl hoverable">☰</div>
+    </nav>
+
+    <!-- VIEWS CONTAINER -->
+
+    <!-- 1. HOME VIEW -->
+    <div id="view-home" class="smooth-wrapper view-section">
+      <!-- Hero Section -->
+      <section
+        class="min-h-screen flex flex-col justify-center px-6 md:px-24 relative z-10"
+      >
+        <div class="hero-content">
+          <p
+            class="text-purple-300 text-sm md:text-base tracking-[0.3em] uppercase mb-4 ml-1 opacity-0 fade-in-up"
+            data-i18n="hero_role"
+          >
+            Front-End Developer & Technologist
+          </p>
+          <h1
+            class="font-serif text-6xl md:text-9xl leading-[0.9] text-[#e8e6d9]"
+          >
+            <span class="hero-line"
+              ><span data-i18n="hero_hello">Hello, World!</span></span
+            >
+            <span class="hero-line"
+              ><span class="italic text-purple-200" data-i18n="hero_name"
+                >It's Yeseul Lee.</span
+              ></span
+            >
+          </h1>
+          <div
+            class="mt-12 flex flex-col md:flex-row gap-8 md:items-end opacity-0 fade-in-up delay-300"
+          >
+            <div
+              class="max-w-md text-sm md:text-lg font-light text-gray-400 leading-relaxed"
+              data-i18n="hero_desc"
+            >
+              Exploration of digital biomes. <br />
+              Merging code, aesthetics, and interaction.
+            </div>
+            <div
+              class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hoverable group cursor-pointer"
+              onclick="scrollToId('about')"
+            >
+              <span class="group-hover:translate-y-1 transition-transform"
+                >↓</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manifesto / About Section -->
+      <section
+        id="about"
+        class="min-h-[80vh] flex items-center px-6 md:px-24 py-20 relative z-20"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 w-full">
+          <div class="glass-panel p-8 md:p-12 rounded-lg">
+            <h2
+              class="text-xs tracking-widest uppercase text-purple-300 mb-6"
+              data-i18n="about_subtitle"
+            >
+              The Concept
+            </h2>
+            <h3 class="font-serif text-3xl md:text-4xl mb-6 leading-tight">
+              <span data-i18n="about_title1">A website is not just a page.</span
+              ><br />
+              <span data-i18n="about_title2">It is a </span
+              ><span class="italic text-purple-200" data-i18n="about_title3"
+                >world</span
+              >.
+            </h3>
+            <p
+              class="text-gray-400 font-light leading-relaxed mb-6"
+              data-i18n="about_text1"
+            >
+              Just as the earth is composed of vast oceans, towering mountains,
+              and complex cities, my skillset spans the depths of backend logic,
+              the heights of creative design, and the structural integrity of
+              clean architecture.
+            </p>
+            <p
+              class="text-gray-400 font-light leading-relaxed"
+              data-i18n="about_text2"
+            >
+              Select a <strong>Biome</strong> below to explore my projects.
+            </p>
+          </div>
+          <div class="flex flex-col justify-center text-right">
+            <div
+              class="stat-item mb-12 opacity-50 hover:opacity-100 transition-opacity"
+            >
+              <span class="block text-5xl md:text-6xl font-serif mb-2">04</span>
+              <span
+                class="text-sm tracking-widest uppercase"
+                data-i18n="stat_exp"
+                >Years Experience</span
+              >
+            </div>
+            <div
+              class="stat-item mb-12 opacity-50 hover:opacity-100 transition-opacity"
+            >
+              <span class="block text-5xl md:text-6xl font-serif mb-2">21</span>
+              <span
+                class="text-sm tracking-widest uppercase"
+                data-i18n="stat_awards"
+                >Awards Won</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Biomes (Categories) Section -->
+      <section id="biomes" class="py-24 px-6 md:px-24 relative z-20">
+        <div class="mb-16">
+          <h2
+            class="font-serif text-5xl md:text-7xl mb-4"
+            data-i18n="biomes_title"
+          >
+            Select Biome
+          </h2>
+          <div class="h-px w-full bg-white/10"></div>
+        </div>
+
+        <div class="biome-list flex flex-col">
+          <!-- Category 1: Frontend -->
+          <div
+            class="biome-item group py-12 flex justify-between items-center cursor-none hoverable"
+            onclick="openCategory('frontend')"
+            data-image="https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop"
+            data-color="#1e3a8a"
+          >
+            <div class="flex items-baseline gap-6">
+              <span class="text-xs text-purple-300 font-mono">01</span>
+              <h3
+                class="text-4xl md:text-6xl font-serif italic group-hover:text-blue-200 transition-colors"
+                data-biome="frontend"
+              >
+                The Deep Ocean
+              </h3>
+            </div>
+            <span
+              class="text-sm uppercase tracking-widest text-gray-500 group-hover:text-white"
+              data-biome-role="frontend"
+              >Frontend Dev</span
+            >
+          </div>
+
+          <!-- Category 2: Fullstack -->
+          <div
+            class="biome-item group py-12 flex justify-between items-center cursor-none hoverable"
+            onclick="openCategory('fullstack')"
+            data-image="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+            data-color="#581c87"
+          >
+            <div class="flex items-baseline gap-6">
+              <span class="text-xs text-purple-300 font-mono">02</span>
+              <h3
+                class="text-4xl md:text-6xl font-serif group-hover:text-purple-200 transition-colors"
+                data-biome="fullstack"
+              >
+                Concrete City
+              </h3>
+            </div>
+            <span
+              class="text-sm uppercase tracking-widest text-gray-500 group-hover:text-white"
+              data-biome-role="fullstack"
+              >Fullstack Eng</span
+            >
+          </div>
+
+          <!-- Category 3: Design -->
+          <div
+            class="biome-item group py-12 flex justify-between items-center cursor-none hoverable"
+            onclick="openCategory('design')"
+            data-image="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop"
+            data-color="#064e3b"
+          >
+            <div class="flex items-baseline gap-6">
+              <span class="text-xs text-purple-300 font-mono">03</span>
+              <h3
+                class="text-4xl md:text-6xl font-serif italic group-hover:text-emerald-200 transition-colors"
+                data-biome="design"
+              >
+                Silent Mountain
+              </h3>
+            </div>
+            <span
+              class="text-sm uppercase tracking-widest text-gray-500 group-hover:text-white"
+              data-biome-role="design"
+              >UI/UX Design</span
+            >
+          </div>
+
+          <!-- Category 4: PM -->
+          <div
+            class="biome-item group py-12 flex justify-between items-center cursor-none hoverable"
+            onclick="openCategory('pm')"
+            data-image="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop"
+            data-color="#be123c"
+          >
+            <div class="flex items-baseline gap-6">
+              <span class="text-xs text-purple-300 font-mono">04</span>
+              <h3
+                class="text-4xl md:text-6xl font-serif group-hover:text-rose-200 transition-colors"
+                data-biome="pm"
+              >
+                Nebula Core
+              </h3>
+            </div>
+            <span
+              class="text-sm uppercase tracking-widest text-gray-500 group-hover:text-white"
+              data-biome-role="pm"
+              >Project Mgmt</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section
+        id="contact"
+        class="min-h-screen flex flex-col justify-center px-6 md:px-24 relative z-20"
+      >
+        <div class="max-w-4xl">
+          <p
+            class="text-purple-300 tracking-widest uppercase mb-8"
+            data-i18n="contact_subtitle"
+          >
+            Initiate Sequence
+          </p>
+          <h2 class="font-serif text-6xl md:text-8xl mb-12">
+            <span data-i18n="contact_title">Ready to build</span> <br />
+            <span
+              class="italic text-gray-500 hover:text-white transition-colors duration-500 cursor-pointer hoverable"
+              data-i18n="contact_link"
+              >the next world?</span
+            >
+          </h2>
+          <div class="flex flex-col md:flex-row gap-8 md:gap-16">
+            <a
+              href="mailto:hello@world.com"
+              class="text-lg border-b border-white/30 pb-2 hover:border-white transition-colors hoverable"
+              >hello@world.dev</a
+            >
+            <a
+              href="#"
+              class="text-lg border-b border-white/30 pb-2 hover:border-white transition-colors hoverable"
+              >LinkedIn</a
+            >
+            <a
+              href="#"
+              class="text-lg border-b border-white/30 pb-2 hover:border-white transition-colors hoverable"
+              >GitHub</a
+            >
+          </div>
+        </div>
+
+        <footer
+          class="absolute bottom-8 left-6 md:left-24 right-6 md:right-24 flex justify-between text-xs text-gray-600 uppercase tracking-widest"
+        >
+          <div>© 2024 Hello World</div>
+          <div>Local Time: <span id="clock">00:00</span></div>
+        </footer>
+      </section>
+    </div>
+
+    <!-- 2. CATEGORY DETAIL VIEW (Hidden by default) -->
+    <div id="view-category">
+      <div class="min-h-screen pt-32 px-6 md:px-24 pb-20">
+        <button
+          onclick="backToHome()"
+          class="mb-12 hoverable flex items-center gap-2 text-sm uppercase tracking-widest hover:text-purple-300 transition-colors"
+        >
+          <span>←</span> <span data-i18n="system_return">System Return</span>
+        </button>
+
+        <!-- Dynamic Header -->
+        <div class="mb-20">
+          <h1
+            id="cat-title"
+            class="font-serif text-5xl md:text-8xl mb-4 text-white"
+          >
+            Category Title
+          </h1>
+          <p
+            id="cat-desc"
+            class="text-purple-200 text-lg md:text-xl font-light max-w-2xl"
+          >
+            Description goes here.
+          </p>
+        </div>
+
+        <!-- Dynamic Project Grid -->
+        <div id="cat-projects" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Projects injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // --- 0. LANGUAGE & DATA CONFIG ---
+      let currentLang = "en";
+
+      // Static UI Translations
+      const translations = {
+        en: {
+          nav_manifesto: "Manifesto",
+          nav_biomes: "Biomes",
+          nav_connect: "Connect",
+          hero_role: "Front-End Developer & Technologist",
+          hero_hello: "Hello, World!",
+          hero_name: "It's Yeseul Lee.",
+          hero_desc:
+            "Exploration of digital biomes. <br>Merging code, aesthetics, and interaction.",
+          about_subtitle: "The Concept",
+          about_title1: "A website is not just a page.",
+          about_title2: "It is a ",
+          about_title3: "world",
+          about_text1:
+            "Just as the earth is composed of vast oceans, towering mountains, and complex cities, my skillset spans the depths of backend logic, the heights of creative design, and the structural integrity of clean architecture.",
+          about_text2:
+            "Select a <strong>Biome</strong> below to explore my projects.",
+          stat_exp: "Years Experience",
+          stat_awards: "Awards Won",
+          biomes_title: "Select Biome",
+          contact_subtitle: "Initiate Sequence",
+          contact_title: "Ready to build",
+          contact_link: "the next world?",
+          system_return: "System Return",
+        },
+        ko: {
+          nav_manifesto: "매니페스토",
+          nav_biomes: "바이옴",
+          nav_connect: "연락하기",
+          hero_role: "프론트엔드 개발자 & 테크놀로지스트",
+          hero_hello: "Hello, World!",
+          hero_name: "이예슬입니다.",
+          hero_desc:
+            "디지털 생태계의 탐험. <br>코드와 미학, 그리고 상호작용의 결합.",
+          about_subtitle: "컨셉",
+          about_title1: "웹사이트는 단순한 페이지가 아닙니다.",
+          about_title2: "그것은 하나의 ",
+          about_title3: "세상입니다",
+          about_text1:
+            "지구가 깊은 바다, 솟아오른 산, 복잡한 도시들로 이루어져 있듯, 저의 기술은 백엔드 로직의 깊이와 크리에이티브 디자인의 높이, 그리고 클린 아키텍처의 구조적 견고함을 아우릅니다.",
+          about_text2:
+            "아래 <strong>바이옴(영역)</strong>을 선택하여 프로젝트를 확인하세요.",
+          stat_exp: "년의 경력",
+          stat_awards: "수상 경력",
+          biomes_title: "바이옴 선택",
+          contact_subtitle: "시퀀스 시작",
+          contact_title: "새로운 세상을",
+          contact_link: "만들 준비 되셨나요?",
+          system_return: "시스템 복귀",
+        },
+      };
+
+      // Biome Data with Multi-language support
+      const biomeData = {
+        frontend: {
+          title_en: "The Deep Ocean",
+          title_ko: "깊은 바다",
+          role_en: "Frontend Dev",
+          role_ko: "프론트엔드",
+          desc_en:
+            "Immersive frontend experiences with fluid animations and responsive architectures.",
+          desc_ko:
+            "유려한 애니메이션과 반응형 아키텍처를 갖춘 몰입형 프론트엔드 경험.",
+          color: "#1e3a8a",
+          projects: [
+            {
+              title: "Liquid Finance",
+              title_ko: "리퀴드 파이낸스",
+              role: "Frontend Lead",
+              role_ko: "프론트엔드 리드",
+              tech: "React, Three.js, Tailwind",
+              desc_en: "A 3D interactive dashboard for a fintech unicorn.",
+              desc_ko: "핀테크 유니콘을 위한 3D 인터랙티브 대시보드.",
+              year: "2024",
+            },
+            {
+              title: "Velvet E-Comm",
+              title_ko: "벨벳 이커머스",
+              role: "Creative Dev",
+              role_ko: "크리에이티브 데브",
+              tech: "Vue, GSAP, Shopify",
+              desc_en: "Award-winning scrolling experience for luxury fashion.",
+              desc_ko: "럭셔리 패션을 위한 수상 경력의 스크롤 경험.",
+              year: "2023",
+            },
+            {
+              title: "Neon Portfolio",
+              title_ko: "네온 포트폴리오",
+              role: "Developer",
+              role_ko: "개발자",
+              tech: "Next.js, WebGL",
+              desc_en: "Experimental personal site for a digital artist.",
+              desc_ko: "디지털 아티스트를 위한 실험적 개인 사이트.",
+              year: "2023",
+            },
+            {
+              title: "Wave UI Kit",
+              title_ko: "웨이브 UI 킷",
+              role: "Maintainer",
+              role_ko: "메인테이너",
+              tech: "Typescript, Storybook",
+              desc_en: "Open source component library for water-themed apps.",
+              desc_ko: "물을 테마로 한 앱을 위한 오픈소스 컴포넌트 라이브러리.",
+              year: "2022",
+            },
+          ],
+        },
+        fullstack: {
+          title_en: "Concrete City",
+          title_ko: "콘크리트 도시",
+          role_en: "Fullstack Eng",
+          role_ko: "풀스택 엔지니어",
+          desc_en: "Robust, scalable architectures built on solid foundations.",
+          desc_ko: "견고한 기초 위에 구축된 확장 가능한 아키텍처.",
+          color: "#581c87",
+          projects: [
+            {
+              title: "Urban API",
+              title_ko: "어반 API",
+              role: "Backend Eng",
+              role_ko: "백엔드 엔지니어",
+              tech: "Node.js, PostgreSQL, Redis",
+              desc_en: "High-throughput API serving 1M+ users daily.",
+              desc_ko: "일일 100만 명 이상의 사용자를 처리하는 고성능 API.",
+              year: "2024",
+            },
+            {
+              title: "Structure SaaS",
+              title_ko: "스트럭처 SaaS",
+              role: "Fullstack",
+              role_ko: "풀스택",
+              tech: "Laravel, Vue, AWS",
+              desc_en:
+                "Enterprise resource planning tool for construction firms.",
+              desc_ko: "건설 회사를 위한 전사적 자원 관리(ERP) 도구.",
+              year: "2023",
+            },
+            {
+              title: "Metro Realtime",
+              title_ko: "메트로 실시간",
+              role: "Lead Eng",
+              role_ko: "리드 엔지니어",
+              tech: "Go, WebSockets",
+              desc_en: "Real-time tracking system for metropolitan transit.",
+              desc_ko: "대도시 교통을 위한 실시간 추적 시스템.",
+              year: "2023",
+            },
+          ],
+        },
+        design: {
+          title_en: "Silent Mountain",
+          title_ko: "고요한 산",
+          role_en: "UI/UX Design",
+          role_ko: "UI/UX 디자인",
+          desc_en:
+            "Minimalist UI/UX design focused on clarity, elevation, and user peace.",
+          desc_ko:
+            "명확성, 고양감, 그리고 사용자의 평온함에 초점을 맞춘 미니멀리스트 디자인.",
+          color: "#064e3b",
+          projects: [
+            {
+              title: "Peak Wellness",
+              title_ko: "피크 웰니스",
+              role: "Product Designer",
+              role_ko: "프로덕트 디자이너",
+              tech: "Figma, Principle",
+              desc_en:
+                "Meditation app interface redesign focused on accessibility.",
+              desc_ko: "접근성에 중점을 둔 명상 앱 인터페이스 리디자인.",
+              year: "2024",
+            },
+            {
+              title: "Alpine Identity",
+              title_ko: "알파인 아이덴티티",
+              role: "Brand Lead",
+              role_ko: "브랜드 리드",
+              tech: "Illustrator, Blender",
+              desc_en: "Complete rebrand for an eco-tourism startup.",
+              desc_ko: "에코 투어리즘 스타트업을 위한 전체 리브랜딩.",
+              year: "2023",
+            },
+          ],
+        },
+        pm: {
+          title_en: "Nebula Core",
+          title_ko: "네뷸라 코어",
+          role_en: "Project Mgmt",
+          role_ko: "프로젝트 관리",
+          desc_en:
+            "Orchestrating complex systems and teams across the digital universe.",
+          desc_ko: "디지털 우주 전반에 걸친 복잡한 시스템과 팀의 조율.",
+          color: "#be123c",
+          projects: [
+            {
+              title: "Project Starship",
+              title_ko: "프로젝트 스타쉽",
+              role: "Product Manager",
+              role_ko: "프로덕트 매니저",
+              tech: "Jira, Agile",
+              desc_en:
+                "Led a team of 15 devs to launch a flagship crypto product.",
+              desc_ko: "15명의 개발팀을 이끌고 주력 암호화폐 제품 출시.",
+              year: "2024",
+            },
+            {
+              title: "Galaxy Roadmap",
+              title_ko: "갤럭시 로드맵",
+              role: "Scrum Master",
+              role_ko: "스크럼 마스터",
+              tech: "Notion, Linear",
+              desc_en: "Optimized sprint velocity by 40% for a remote team.",
+              desc_ko: "원격 팀의 스프린트 속도를 40% 최적화.",
+              year: "2023",
+            },
+          ],
+        },
+      };
+
+      function toggleLanguage() {
+        currentLang = currentLang === "en" ? "ko" : "en";
+        const langBtn = document.getElementById("lang-toggle");
+
+        // 1. Update Body Class for Fonts
+        document.body.classList.remove("lang-en", "lang-ko");
+        document.body.classList.add(`lang-${currentLang}`);
+
+        // 2. Update Toggle Button Text
+        langBtn.textContent = currentLang === "en" ? "EN" : "KO"; // Shows current active
+
+        // 3. Update Static Text (data-i18n)
+        const elements = document.querySelectorAll("[data-i18n]");
+        elements.forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (translations[currentLang][key]) {
+            // Check if it's strictly HTML (contains tags)
+            if (translations[currentLang][key].includes("<")) {
+              el.innerHTML = translations[currentLang][key];
+            } else {
+              el.textContent = translations[currentLang][key];
+            }
+          }
+        });
+
+        // 4. Update Biome List Items (Titles & Roles)
+        const biomes = document.querySelectorAll(".biome-item");
+        biomes.forEach((b) => {
+          const key = b.getAttribute("onclick").match(/'([^']+)'/)[1]; // Extract key from onclick
+          const data = biomeData[key];
+
+          const titleEl = b.querySelector(`[data-biome="${key}"]`);
+          const roleEl = b.querySelector(`[data-biome-role="${key}"]`);
+
+          if (titleEl)
+            titleEl.textContent =
+              currentLang === "en" ? data.title_en : data.title_ko;
+          if (roleEl)
+            roleEl.textContent =
+              currentLang === "en" ? data.role_en : data.role_ko;
+        });
+
+        // 5. Update Detail View if Open
+        const viewCategory = document.getElementById("view-category");
+        if (viewCategory.style.display === "block") {
+          // Find which category is currently open by checking title
+          // This is a bit hacky, but works for this simple structure
+          // Ideally we store currentCategory state
+          if (window.activeCategory) {
+            openCategory(window.activeCategory, true); // Re-render content
+          }
+        }
+      }
+
+      // --- 1. VIEW MANAGEMENT ---
+      const viewHome = document.getElementById("view-home");
+      const viewCategory = document.getElementById("view-category");
+      window.activeCategory = null;
+
+      function openCategory(key, isLangSwitch = false) {
+        const data = biomeData[key];
+        if (!data) return;
+        window.activeCategory = key;
+
+        // 1. Populate Data
+        const title = currentLang === "en" ? data.title_en : data.title_ko;
+        const desc = currentLang === "en" ? data.desc_en : data.desc_ko;
+
+        document.getElementById("cat-title").textContent = title;
+        document.getElementById("cat-title").style.color =
+          data.color === "#0d0816" ? "white" : "white";
+        document.getElementById("cat-desc").textContent = desc;
+
+        const grid = document.getElementById("cat-projects");
+        grid.innerHTML = "";
+
+        data.projects.forEach((proj) => {
+          const pTitle = currentLang === "en" ? proj.title : proj.title_ko;
+          const pDesc = currentLang === "en" ? proj.desc_en : proj.desc_ko;
+          const pRole = currentLang === "en" ? proj.role : proj.role_ko;
+
+          const card = document.createElement("div");
+          card.className =
+            "category-project-card p-8 border border-white/10 rounded hoverable";
+          if (!isLangSwitch) card.style.opacity = "0";
+          else card.style.opacity = "1";
+
+          card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-xs text-purple-300 font-mono">${proj.year}</span>
+                        <span class="text-xs border border-white/20 px-2 py-1 rounded-full">${pRole}</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">${pTitle}</h3>
+                    <p class="text-sm text-gray-400 mb-4">${pDesc}</p>
+                    <div class="text-xs font-mono text-gray-500 uppercase tracking-widest">${proj.tech}</div>
+                `;
+          grid.appendChild(card);
+        });
+
+        if (isLangSwitch) return; // Don't animate if just switching language
+
+        // 2. Animate Transition
+        gsap.to(viewHome, {
+          opacity: 0,
+          duration: 0.5,
+          pointerEvents: "none",
+          onComplete: () => {
+            viewHome.style.display = "none";
+            viewCategory.style.display = "block";
+            viewCategory.style.visibility = "visible";
+
+            gsap.to(viewCategory, { opacity: 1, duration: 0.5 });
+
+            gsap.to(".category-project-card", {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              stagger: 0.1,
+              delay: 0.2,
+              startAt: { y: 20 },
+            });
+
+            gsap.to(":root", { "--accent": data.color, duration: 1 });
+          },
+        });
+      }
+
+      function backToHome() {
+        window.activeCategory = null;
+        gsap.to(viewCategory, {
+          opacity: 0,
+          duration: 0.5,
+          onComplete: () => {
+            viewCategory.style.display = "none";
+            viewCategory.style.visibility = "hidden";
+            viewHome.style.display = "block";
+
+            gsap.to(viewHome, {
+              opacity: 1,
+              duration: 0.5,
+              pointerEvents: "all",
+            });
+
+            gsap.to(":root", { "--accent": "#b8a2ff", duration: 1 });
+          },
+        });
+      }
+
+      function scrollToId(id) {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // --- 2. LENIS SMOOTH SCROLL ---
+      if (typeof Lenis !== "undefined") {
+        const lenis = new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          direction: "vertical",
+          gestureDirection: "vertical",
+          smooth: true,
+          mouseMultiplier: 1,
+          smoothTouch: false,
+          touchMultiplier: 2,
+        });
+
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+      } else {
+        console.warn("Lenis not loaded. Smooth scrolling disabled.");
+        document.documentElement.style.scrollBehavior = "smooth";
+      }
+
+      // --- 3. THREE.JS SPHERE ---
+      const initThreeJS = () => {
+        if (typeof THREE === "undefined") return;
+        const container = document.getElementById("webgl-container");
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000,
+        );
+        camera.position.z = 2.5;
+
+        const renderer = new THREE.WebGLRenderer({
+          alpha: true,
+          antialias: true,
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Group to hold everything
+        const mainGroup = new THREE.Group();
+        scene.add(mainGroup);
+
+        // 1. Core Sphere (Realistic Earth with Textures)
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.setCrossOrigin("anonymous"); // Required for CDN textures
+
+        // Using reliable high-res textures from Three.js examples CDN
+        const earthMap = textureLoader.load(
+          "https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/planets/earth_atmos_2048.jpg",
+        );
+        const cloudMap = textureLoader.load(
+          "https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/planets/earth_clouds_1024.png",
+        );
+
+        const coreGeo = new THREE.SphereGeometry(1, 64, 64);
+
+        // Switched to MeshBasicMaterial since lighting is removed
+        const coreMat = new THREE.MeshBasicMaterial({
+          map: earthMap,
+        });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+
+        // Rotate the core to face East Asia
+        core.rotation.y = Math.PI * 0.6;
+
+        mainGroup.add(core);
+
+        // 1.5 Cloud Layer
+        const cloudGeo = new THREE.SphereGeometry(1.015, 64, 64);
+        // Switched to MeshBasicMaterial
+        const cloudMat = new THREE.MeshBasicMaterial({
+          map: cloudMap,
+          transparent: true,
+          opacity: 0.6,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        });
+        const clouds = new THREE.Mesh(cloudGeo, cloudMat);
+        core.add(clouds);
+
+        // 2. Outer Wireframe Shell
+        const outerGeo = new THREE.IcosahedronGeometry(1.4, 2);
+        const outerMat = new THREE.MeshBasicMaterial({
+          color: 0x64748b,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.1,
+        });
+        const outerShell = new THREE.Mesh(outerGeo, outerMat);
+        mainGroup.add(outerShell);
+
+        // 3. Floating Atmosphere Particles
+        const particlesGeo = new THREE.BufferGeometry();
+        const particleCount = 1000;
+        const posArray = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount * 3; i++) {
+          posArray[i] = (Math.random() - 0.5) * 6; // Spread them out
+        }
+        particlesGeo.setAttribute(
+          "position",
+          new THREE.BufferAttribute(posArray, 3),
+        );
+        const particlesMat = new THREE.PointsMaterial({
+          size: 0.008,
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.4,
+          blending: THREE.AdditiveBlending,
+        });
+        const atmosphere = new THREE.Points(particlesGeo, particlesMat);
+        scene.add(atmosphere); // Add to scene to float independently
+
+        // 4. Multiple Orbital Rings
+        const createRing = (radius, tiltX, tiltY) => {
+          const ringGeo = new THREE.TorusGeometry(radius, 0.005, 16, 100);
+          const ringMat = new THREE.MeshBasicMaterial({
+            color: 0xb8a2ff,
+            transparent: true,
+            opacity: 0.2,
+            blending: THREE.AdditiveBlending,
+          });
+          const ring = new THREE.Mesh(ringGeo, ringMat);
+          ring.rotation.x = tiltX;
+          ring.rotation.y = tiltY;
+          return ring;
+        };
+
+        const ring1 = createRing(1.6, Math.PI / 2, 0);
+        const ring2 = createRing(1.8, Math.PI / 3, Math.PI / 6);
+        const ring3 = createRing(2.0, Math.PI / 4, -Math.PI / 6);
+
+        mainGroup.add(ring1);
+        mainGroup.add(ring2);
+        mainGroup.add(ring3);
+
+        // Animation Variables
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener("mousemove", (event) => {
+          mouseX = event.clientX - windowHalfX;
+          mouseY = event.clientY - windowHalfY;
+        });
+
+        const clock = new THREE.Clock();
+
+        const animate = () => {
+          targetX = mouseX * 0.001;
+          targetY = mouseY * 0.001;
+
+          const elapsedTime = clock.getElapsedTime();
+
+          // Rotate Main Group
+          mainGroup.rotation.y += 0.002;
+          mainGroup.rotation.x += 0.001;
+
+          // Independent Rotations for Depth
+          outerShell.rotation.y -= 0.001;
+          atmosphere.rotation.y += 0.0005;
+
+          // Rings Independent Rotation
+          ring1.rotation.z += 0.002;
+          ring2.rotation.z -= 0.002;
+          ring3.rotation.z += 0.001;
+
+          // Mouse Follow Easing
+          mainGroup.rotation.y += 0.05 * (targetX - mainGroup.rotation.y);
+          mainGroup.rotation.x += 0.05 * (targetY - mainGroup.rotation.x);
+
+          // Breathing Effect (subtler for realistic earth)
+          const scale = 1 + Math.sin(elapsedTime * 0.5) * 0.01;
+          core.scale.set(scale, scale, scale);
+          outerShell.scale.set(scale * 1.05, scale * 1.05, scale * 1.05);
+
+          // Cloud rotation
+          clouds.rotation.y += 0.0005;
+
+          // Color Sync
+          const style = getComputedStyle(document.documentElement);
+          const colorHex = style.getPropertyValue("--accent").trim();
+          const colorObj = new THREE.Color(colorHex);
+
+          // Keep the outer rings synced with the biome colors
+          ring1.material.color.lerp(colorObj, 0.05);
+          ring2.material.color.lerp(colorObj, 0.05);
+          ring3.material.color.lerp(colorObj, 0.05);
+
+          renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+        };
+
+        animate();
+
+        window.addEventListener("resize", () => {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+      };
+
+      // --- 4. CURSOR ---
+      const initCursor = () => {
+        const cursorDot = document.querySelector(".cursor-dot");
+        const cursorOutline = document.querySelector(".cursor-outline");
+
+        const xToDot = gsap.quickTo(cursorDot, "x", {
+          duration: 0.1,
+          ease: "power3",
+        });
+        const yToDot = gsap.quickTo(cursorDot, "y", {
+          duration: 0.1,
+          ease: "power3",
+        });
+        const xToOutline = gsap.quickTo(cursorOutline, "x", {
+          duration: 0.5,
+          ease: "power3",
+        });
+        const yToOutline = gsap.quickTo(cursorOutline, "y", {
+          duration: 0.5,
+          ease: "power3",
+        });
+
+        window.addEventListener("mousemove", (e) => {
+          xToDot(e.clientX);
+          yToDot(e.clientY);
+          xToOutline(e.clientX);
+          yToOutline(e.clientY);
+        });
+
+        // Delegate hover for dynamic elements
+        document.body.addEventListener("mouseover", (e) => {
+          if (e.target.closest(".hoverable")) {
+            document.body.classList.add("hovering");
+          } else {
+            document.body.classList.remove("hovering");
+          }
+        });
+      };
+
+      // --- 5. BIOME PREVIEW (HOVER ON HOME) ---
+      const initProjectReveal = () => {
+        const biomes = document.querySelectorAll(".biome-item");
+        const preview = document.getElementById("project-preview");
+
+        biomes.forEach((biome) => {
+          biome.addEventListener("mouseenter", (e) => {
+            const img = biome.getAttribute("data-image");
+            const color = biome.getAttribute("data-color");
+
+            preview.style.backgroundImage = `url(${img})`;
+            preview.style.opacity = "0.6";
+            preview.style.transform = "translate(-50%, -50%) scale(1)";
+
+            gsap.to(":root", { "--accent": color, duration: 0.5 });
+          });
+
+          biome.addEventListener("mouseleave", () => {
+            preview.style.opacity = "0";
+            preview.style.transform = "translate(-50%, -50%) scale(0.8)";
+            gsap.to(":root", { "--accent": "#b8a2ff", duration: 0.5 });
+          });
+        });
+      };
+
+      // --- 6. ANIMATIONS ---
+      const initAnimations = () => {
+        if (typeof gsap === "undefined") return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        const tl = gsap.timeline();
+
+        tl.to(".loader-text span", { y: 0, duration: 1, ease: "power4.out" })
+          .to(".loader", {
+            yPercent: -100,
+            duration: 1.2,
+            ease: "power4.inOut",
+            delay: 0.5,
+          })
+          .to("#webgl-container", { opacity: 1, duration: 1.5 }, "-=0.5")
+          .to(
+            ".hero-line span",
+            { y: 0, duration: 1.2, stagger: 0.2, ease: "power4.out" },
+            "-=1",
+          )
+          .to(
+            ".fade-in-up",
+            { opacity: 1, y: 0, duration: 1, stagger: 0.2 },
+            "-=0.8",
+          );
+
+        gsap.utils.toArray("#view-home section").forEach((section) => {
+          gsap.fromTo(
+            section,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              scrollTrigger: {
+                trigger: section,
+                start: "top 80%",
+                end: "top 20%",
+                scrub: false,
+              },
+            },
+          );
+        });
+      };
+
+      // --- 7. CLOCK ---
+      const updateClock = () => {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("clock").textContent = timeString;
+      };
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      // --- INIT ---
+      window.addEventListener("DOMContentLoaded", () => {
+        initThreeJS();
+        initCursor();
+        initProjectReveal();
+        initAnimations();
+      });
+    </script>
+  </body>
+</html>
