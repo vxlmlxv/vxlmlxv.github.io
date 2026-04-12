@@ -43,7 +43,7 @@ export default function BiomeItem({
       data-color={biome.color}
     >
       <div className="flex items-baseline gap-6">
-        <span className="font-mono text-xs text-purple-300">
+        <span className="font-mono text-xs text-[var(--theme-accent)]">
           {String(index + 1).padStart(2, "0")}
         </span>
         <h3

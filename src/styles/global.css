@@ -3,7 +3,9 @@
 :root {
   --bg-color: #0d0816;
   --text-main: #e8e6d9;
-  --accent: #b8a2ff;
+  --theme-accent: #aeb8a0;
+  --theme-accent-soft: color-mix(in srgb, var(--theme-accent) 72%, white);
+  --accent: var(--theme-accent);
   --cursor-size: 20px;
 }
 

@@ -18,7 +18,7 @@ import { useClock } from "../lib/hooks/useClock";
 import { useLenis } from "../lib/hooks/useLenis";
 import type { BiomeKey, Language } from "../lib/types";
 
-const DEFAULT_ACCENT = "#b8a2ff";
+const DEFAULT_ACCENT = "#AEB8A0";
 
 export default function PortfolioExperience() {
   const [language, setLanguage] = useState<Language>("en");

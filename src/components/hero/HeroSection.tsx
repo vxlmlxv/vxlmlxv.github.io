@@ -16,7 +16,7 @@ export default function HeroSection({
     <section className="relative z-10 flex min-h-screen flex-col justify-center px-6 md:px-24">
       <div className="hero-content">
         <p
-          className="fade-in-up ml-1 mb-4 text-sm uppercase tracking-[0.3em] text-purple-300 opacity-0 md:text-base"
+          className="fade-in-up ml-1 mb-4 text-sm uppercase tracking-[0.3em] text-[var(--theme-accent)] opacity-0 md:text-base"
           data-i18n="hero_role"
         >
           {copy.hero_role}
@@ -27,7 +27,7 @@ export default function HeroSection({
           </span>
           <span className="hero-line">
             <span
-              className="font-serif italic text-purple-200"
+              className="font-serif italic text-[var(--theme-accent-soft)]"
               data-i18n="hero_name"
             >
               {copy.hero_name}

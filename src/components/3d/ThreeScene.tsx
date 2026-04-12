@@ -134,7 +134,7 @@ export default function ThreeScene() {
     ): THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial> => {
       const ringGeo = new THREE.TorusGeometry(radius, 0.005, 16, 100);
       const ringMat = new THREE.MeshBasicMaterial({
-        color: 0xb8a2ff,
+        color: 0xaeb8a0,
         transparent: true,
         opacity: 0.28,
         blending: THREE.AdditiveBlending,

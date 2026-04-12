@@ -26,7 +26,7 @@ const CategoryDetailView = forwardRef<HTMLDivElement, CategoryDetailViewProps>(
           <button
             type="button"
             onClick={onBackToHome}
-            className="hoverable mb-12 flex items-center gap-2 text-sm uppercase tracking-widest transition-colors hover:text-purple-300"
+            className="hoverable mb-12 flex items-center gap-2 text-sm uppercase tracking-widest transition-colors hover:text-[var(--theme-accent)]"
           >
             <span>←</span> <span data-i18n="system_return">{copy.system_return}</span>
           </button>
@@ -40,7 +40,7 @@ const CategoryDetailView = forwardRef<HTMLDivElement, CategoryDetailViewProps>(
             </h1>
             <p
               id="cat-desc"
-              className="max-w-2xl text-lg font-light text-purple-200 md:text-xl"
+              className="max-w-2xl text-lg font-light text-[var(--theme-accent-soft)] md:text-xl"
             >
               {biome
                 ? getBiomeDescription(biome, language)

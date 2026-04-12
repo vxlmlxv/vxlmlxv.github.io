@@ -17,7 +17,9 @@ export default function CategoryProjectCard({
   return (
     <div className="category-project-card hoverable rounded border border-white/10 p-8">
       <div className="mb-4 flex items-start justify-between">
-        <span className="font-mono text-xs text-purple-300">{project.year}</span>
+        <span className="font-mono text-xs text-[var(--theme-accent)]">
+          {project.year}
+        </span>
         <span className="rounded-full border border-white/20 px-2 py-1 text-xs">
           {getProjectRole(project, language)}
         </span>

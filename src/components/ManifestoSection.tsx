@@ -18,7 +18,7 @@ export default function ManifestoSection({
       <div className="grid w-full grid-cols-1 gap-16 md:grid-cols-2">
         <div className="glass-panel rounded-lg p-8 md:p-12">
           <h2
-            className="mb-6 text-xs uppercase tracking-widest text-purple-300"
+            className="mb-6 text-xs uppercase tracking-widest text-[var(--theme-accent)]"
             data-i18n="about_subtitle"
           >
             {copy.about_subtitle}
@@ -28,7 +28,7 @@ export default function ManifestoSection({
             <br />
             <span data-i18n="about_title2">{copy.about_title2}</span>
             <span
-              className="font-serif italic text-purple-200"
+              className="font-serif italic text-[var(--theme-accent-soft)]"
               data-i18n="about_title3"
             >
               {copy.about_title3}

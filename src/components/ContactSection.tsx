@@ -19,7 +19,7 @@ export default function ContactSection({
     >
       <div className="max-w-4xl">
         <p
-          className="mb-8 uppercase tracking-widest text-purple-300"
+          className="mb-8 uppercase tracking-widest text-[var(--theme-accent)]"
           data-i18n="contact_subtitle"
         >
           {copy.contact_subtitle}

@@ -39,7 +39,7 @@ export default function Navigation({
             event.preventDefault();
             onNavigate("about");
           }}
-          className="hoverable transition-colors hover:text-purple-300"
+          className="hoverable transition-colors hover:text-[var(--theme-accent)]"
           data-i18n="nav_manifesto"
         >
           {copy.nav_manifesto}
@@ -50,7 +50,7 @@ export default function Navigation({
             event.preventDefault();
             onNavigate("biomes");
           }}
-          className="hoverable transition-colors hover:text-purple-300"
+          className="hoverable transition-colors hover:text-[var(--theme-accent)]"
           data-i18n="nav_biomes"
         >
           {copy.nav_biomes}
@@ -61,7 +61,7 @@ export default function Navigation({
             event.preventDefault();
             onNavigate("contact");
           }}
-          className="hoverable transition-colors hover:text-purple-300"
+          className="hoverable transition-colors hover:text-[var(--theme-accent)]"
           data-i18n="nav_connect"
         >
           {copy.nav_connect}
