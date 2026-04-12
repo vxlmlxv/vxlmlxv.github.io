@@ -20,6 +20,12 @@ body {
   cursor: none;
 }
 
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
 .font-serif {
   font-family: "Playfair Display", serif;
 }
@@ -38,14 +44,19 @@ body.lang-ko p {
 
 #webgl-container {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100vh;
-  z-index: -1;
+  z-index: 0;
   opacity: 0;
   transition: opacity 1.5s ease;
   pointer-events: none;
+  overflow: hidden;
+  will-change: opacity, transform;
+}
+
+#webgl-container.is-ready {
+  opacity: 1;
 }
 
 #webgl-container canvas {

@@ -161,7 +161,12 @@ export default function PortfolioExperience() {
             ease: "power4.inOut",
             delay: 0.5,
           })
-          .to("#webgl-container", { opacity: 1, duration: 1.5 }, "-=0.5")
+          .fromTo(
+            "#webgl-container",
+            { opacity: 0 },
+            { opacity: 1, duration: 1.5 },
+            "-=0.5",
+          )
           .to(
             ".hero-line span",
             {
@@ -254,7 +259,7 @@ export default function PortfolioExperience() {
   }, [renderedCategory]);
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="app-shell">
       <Loader />
       <CustomCursor />
       <ThreeScene />

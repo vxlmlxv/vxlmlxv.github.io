@@ -12,6 +12,30 @@ export default function ThreeScene() {
 
     if (!container) return;
 
+    const createPointSphere = (
+      pointCount: number,
+      minRadius: number,
+      maxRadius: number,
+    ): THREE.BufferGeometry => {
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(pointCount * 3);
+
+      for (let index = 0; index < pointCount; index += 1) {
+        const radius = THREE.MathUtils.randFloat(minRadius, maxRadius);
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const stride = index * 3;
+
+        positions[stride] = radius * Math.sin(phi) * Math.cos(theta);
+        positions[stride + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        positions[stride + 2] = radius * Math.cos(phi);
+      }
+
+      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+      return geometry;
+    };
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       75,
@@ -25,9 +49,12 @@ export default function ThreeScene() {
       alpha: true,
       antialias: true,
     });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setClearColor(0x000000, 0);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
+    container.replaceChildren(renderer.domElement);
+    container.classList.add("is-ready");
 
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
@@ -37,9 +64,18 @@ export default function ThreeScene() {
 
     const earthMap = textureLoader.load(threeSceneAssets.textures.earthDiffuse);
     const cloudMap = textureLoader.load(threeSceneAssets.textures.earthClouds);
+    const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    earthMap.colorSpace = THREE.SRGBColorSpace;
+    earthMap.anisotropy = maxAnisotropy;
+    cloudMap.colorSpace = THREE.SRGBColorSpace;
+    cloudMap.anisotropy = maxAnisotropy;
 
     const coreGeo = new THREE.SphereGeometry(1, 64, 64);
-    const coreMat = new THREE.MeshBasicMaterial({ map: earthMap });
+    const coreMat = new THREE.MeshBasicMaterial({
+      map: earthMap,
+      color: 0xffffff,
+    });
     const core = new THREE.Mesh(coreGeo, coreMat);
     core.rotation.y = Math.PI * 0.6;
     mainGroup.add(core);
@@ -66,22 +102,27 @@ export default function ThreeScene() {
     const outerShell = new THREE.Mesh(outerGeo, outerMat);
     mainGroup.add(outerShell);
 
-    const particlesGeo = new THREE.BufferGeometry();
-    const particleCount = 1000;
-    const posArray = new Float32Array(particleCount * 3);
+    const starFieldGeo = createPointSphere(2400, 6.5, 14);
+    const starFieldMat = new THREE.PointsMaterial({
+      size: 0.02,
+      color: 0xf8fafc,
+      transparent: true,
+      opacity: 0.7,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const starField = new THREE.Points(starFieldGeo, starFieldMat);
+    scene.add(starField);
 
-    for (let index = 0; index < particleCount * 3; index += 1) {
-      posArray[index] = (Math.random() - 0.5) * 6;
-    }
-
-    particlesGeo.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
+    const particlesGeo = createPointSphere(1000, 2.2, 4.5);
 
     const particlesMat = new THREE.PointsMaterial({
-      size: 0.008,
+      size: 0.01,
       color: 0xffffff,
       transparent: true,
       opacity: 0.4,
       blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
     const atmosphere = new THREE.Points(particlesGeo, particlesMat);
     scene.add(atmosphere);
@@ -95,8 +136,10 @@ export default function ThreeScene() {
       const ringMat = new THREE.MeshBasicMaterial({
         color: 0xb8a2ff,
         transparent: true,
-        opacity: 0.2,
+        opacity: 0.28,
         blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        depthWrite: false,
       });
       const ring = new THREE.Mesh(ringGeo, ringMat);
       ring.rotation.x = tiltX;
@@ -117,12 +160,9 @@ export default function ThreeScene() {
     let targetX = 0;
     let targetY = 0;
 
-    const windowHalfX = window.innerWidth / 2;
-    const windowHalfY = window.innerHeight / 2;
-
     const handleMouseMove = (event: MouseEvent): void => {
-      mouseX = event.clientX - windowHalfX;
-      mouseY = event.clientY - windowHalfY;
+      mouseX = event.clientX - window.innerWidth / 2;
+      mouseY = event.clientY - window.innerHeight / 2;
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -140,6 +180,8 @@ export default function ThreeScene() {
       mainGroup.rotation.x += 0.001;
 
       outerShell.rotation.y -= 0.001;
+      starField.rotation.y += 0.00015;
+      starField.rotation.x -= 0.00005;
       atmosphere.rotation.y += 0.0005;
 
       ring1.rotation.z += 0.002;
@@ -181,6 +223,7 @@ export default function ThreeScene() {
       window.cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("mousemove", handleMouseMove);
+      container.classList.remove("is-ready");
 
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh) {
@@ -207,7 +250,7 @@ export default function ThreeScene() {
       earthMap.dispose();
       cloudMap.dispose();
       renderer.dispose();
-      container.innerHTML = "";
+      container.replaceChildren();
     };
   }, []);
 
