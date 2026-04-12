@@ -1,3 +1,4 @@
+import { profileData } from "../lib/data/profile";
 import { translations } from "../lib/data/translations";
 import type { Language } from "../lib/types";
 import LanguageToggle from "./ui/LanguageToggle";
@@ -16,6 +17,7 @@ export default function Navigation({
   onToggleLanguage,
 }: NavigationProps) {
   const copy = translations[language];
+  const profile = profileData[language];
 
   return (
     <nav className="fixed top-0 z-[200] flex w-full items-center justify-between p-8 text-white mix-blend-difference">
@@ -24,7 +26,7 @@ export default function Navigation({
           className="hoverable cursor-pointer text-sm font-bold uppercase tracking-widest"
           onClick={onBackToHome}
         >
-          Dev.Portfolio
+          {profile.navigation.brand}
         </div>
         <LanguageToggle
           language={language}
