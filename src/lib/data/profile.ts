@@ -43,28 +43,28 @@ interface ProfileContent {
   };
 }
 
-const navigationBrand = "Dev.Portfolio";
+const navigationBrand = "Yeseul Lee";
 
 const contactLinks: ProfileLink[] = [
   {
     id: "email",
-    href: "mailto:hello@world.com",
-    text: "hello@world.dev",
+    href: "mailto:vxlmlxv@gmail.com",
+    text: "vxlmlxv@gmail.com",
   },
   {
     id: "linkedin",
-    href: "#",
+    href: "https://www.linkedin.com/in/ye-seul-lee-b62298295",
     text: "LinkedIn",
   },
   {
     id: "github",
-    href: "#",
+    href: "https://github.com/vxlmlxv",
     text: "GitHub",
   },
 ];
 
 const footerContent = {
-  copyright: "© 2024 Hello World",
+  copyright: "© 2026 Hello World",
   timeLabel: "Local Time",
 };
 
@@ -92,14 +92,14 @@ export const profileData: Record<Language, ProfileContent> = {
     },
     stats: [
       {
-        id: "stat_exp",
-        value: "04",
-        label: "Years Experience",
+        id: "stat_projects",
+        value: "8+",
+        label: "Team Projects",
       },
       {
-        id: "stat_awards",
-        value: "21",
-        label: "Awards Won",
+        id: "stat_frameworks",
+        value: "React, Typescript, Figma",
+        label: "Frameworks & Tools",
       },
     ],
     contact: {
@@ -118,7 +118,8 @@ export const profileData: Record<Language, ProfileContent> = {
       role: "프론트엔드 개발자 & 제품 중심 빌더",
       hello: "Hello, World!",
       name: "이예슬입니다.",
-      description: "디지털 생태계의 탐험. <br>코드와 미학, 그리고 상호작용의 결합.",
+      description:
+        "디지털 생태계의 탐험. <br>코드와 미학, 그리고 상호작용의 결합.",
     },
     about: {
       subtitle: "컨셉",
@@ -132,14 +133,14 @@ export const profileData: Record<Language, ProfileContent> = {
     },
     stats: [
       {
-        id: "stat_exp",
-        value: "04",
-        label: "년의 경력",
+        id: "stat_projects",
+        value: "8+",
+        label: "개의 팀 프로젝트",
       },
       {
-        id: "stat_awards",
-        value: "21",
-        label: "수상 경력",
+        id: "stat_frameworks",
+        value: "React, Typescript, Figma",
+        label: "Frameworks & Tools",
       },
     ],
     contact: {
