@@ -21,7 +21,7 @@ const CategoryDetailView = forwardRef<HTMLDivElement, CategoryDetailViewProps>(
     const biome = categoryKey ? biomeData[categoryKey] : null;
 
     return (
-      <div id="view-category" ref={ref}>
+      <div id="view-category" ref={ref} data-lenis-prevent>
         <div className="min-h-screen px-6 pt-32 pb-20 md:px-24">
           <button
             type="button"

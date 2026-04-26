@@ -240,6 +240,7 @@ export default function PortfolioExperience() {
         viewHomeRef.current.style.display = "none";
         viewCategoryRef.current.style.display = "block";
         viewCategoryRef.current.style.visibility = "visible";
+        viewCategoryRef.current.scrollTop = 0;
 
         gsap.to(viewCategoryRef.current, { opacity: 1, duration: 0.5 });
         gsap.to(cards, {
