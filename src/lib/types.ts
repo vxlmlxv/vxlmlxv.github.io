@@ -11,6 +11,13 @@ export interface BiomeProject {
   desc_en: string;
   desc_ko: string;
   year: string;
+  subtitle_en?: string;
+  subtitle_ko?: string;
+  highlights_en?: string[];
+  highlights_ko?: string[];
+  outcome_en?: string;
+  outcome_ko?: string;
+  featuredRank?: number;
 }
 
 export interface Biome {
