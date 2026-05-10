@@ -1,0 +1,81 @@
+:root {
+  --bg-color: #010828;
+  --text-main: #eff4ff;
+  --theme-accent: #6fff00;
+  --theme-accent-soft: color-mix(in srgb, #6fff00 58%, #eff4ff);
+  --accent: var(--theme-accent);
+}
+
+body.orbis-theme {
+  background-color: #010828;
+  color: #eff4ff;
+  font-family: ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+    monospace;
+  letter-spacing: 0;
+}
+
+body.orbis-theme .font-serif {
+  font-family: "Anton", Impact, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+body.orbis-theme .font-serif.italic,
+body.orbis-theme .italic.text-\[var\(--theme-accent-soft\)\],
+body.orbis-theme .italic.hoverable {
+  color: #6fff00;
+  font-family: "Condiment", cursive;
+  font-style: normal;
+  font-weight: 400;
+  text-transform: none;
+}
+
+body.orbis-theme .font-mono,
+body.orbis-theme [class*="font-mono"] {
+  font-family: ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+    monospace;
+}
+
+body.orbis-theme .tracking-widest,
+body.orbis-theme .tracking-\[0\.3em\] {
+  letter-spacing: 0;
+}
+
+body.orbis-theme .text-\[\#e8e6d9\],
+body.orbis-theme .text-white {
+  color: #eff4ff;
+}
+
+body.orbis-theme .text-gray-400,
+body.orbis-theme .text-gray-500,
+body.orbis-theme .text-gray-600 {
+  color: color-mix(in srgb, #eff4ff 58%, #010828);
+}
+
+body.orbis-theme .border-white\/20,
+body.orbis-theme .border-white\/30 {
+  border-color: color-mix(in srgb, #eff4ff 28%, transparent);
+}
+
+body.orbis-theme .bg-white\/10 {
+  background-color: color-mix(in srgb, #eff4ff 18%, transparent);
+}
+
+body.orbis-theme .glass-panel {
+  background: color-mix(in srgb, #eff4ff 4%, transparent);
+  border-color: color-mix(in srgb, #eff4ff 9%, transparent);
+}
+
+body.orbis-theme .cursor-dot {
+  background-color: #eff4ff;
+}
+
+body.orbis-theme .cursor-outline {
+  border-color: color-mix(in srgb, #eff4ff 50%, transparent);
+}
+
+body.orbis-theme .loader {
+  background: #010828;
+}

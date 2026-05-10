@@ -1,0 +1,1240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A standalone cinematic portfolio concept for Yeseul Lee, built from the existing portfolio data."
+    />
+    <title>Yeseul Lee | Orbital Lab Concept</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Condiment&family=Geist:wght@400;500;650;750&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --void: oklch(10% 0.045 262);
+        --void-deep: oklch(6% 0.04 260);
+        --cream: oklch(94% 0.025 248);
+        --cream-muted: oklch(78% 0.035 248);
+        --line: oklch(92% 0.02 250 / 0.18);
+        --neon: oklch(86% 0.28 134);
+        --amber: oklch(78% 0.13 72);
+        --rose: oklch(64% 0.16 18);
+        --cyan-quiet: oklch(75% 0.09 210);
+        --glass: oklch(98% 0.01 250 / 0.045);
+        --glass-strong: oklch(98% 0.01 250 / 0.085);
+        --max: 1831px;
+        --space-2xs: 0.25rem;
+        --space-xs: 0.5rem;
+        --space-sm: 0.75rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --space-3xl: 4rem;
+        --space-4xl: 6rem;
+        --display: "Anton", Impact, sans-serif;
+        --accent-script: "Condiment", cursive;
+        --body: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--void-deep);
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        overflow-x: hidden;
+        background:
+          radial-gradient(circle at 76% 9%, oklch(45% 0.16 145 / 0.25), transparent 24rem),
+          radial-gradient(circle at 8% 26%, oklch(56% 0.12 24 / 0.16), transparent 24rem),
+          linear-gradient(180deg, var(--void), var(--void-deep) 54%, oklch(8% 0.05 250));
+        color: var(--cream);
+        font-family: var(--body);
+        letter-spacing: 0;
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        content: "";
+        pointer-events: none;
+        background-image: url("assets/textures/earth-clouds-1024.png");
+        background-position: center;
+        background-size: cover;
+        mix-blend-mode: lighten;
+        opacity: 0.24;
+      }
+
+      body::after {
+        position: fixed;
+        inset: 0;
+        z-index: 49;
+        content: "";
+        pointer-events: none;
+        background:
+          linear-gradient(transparent 0 94%, oklch(94% 0.02 248 / 0.045) 94% 100%),
+          linear-gradient(90deg, transparent 0 94%, oklch(94% 0.02 248 / 0.035) 94% 100%);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(180deg, transparent, black 22%, black 80%, transparent);
+        opacity: 0.33;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--neon);
+        outline-offset: 4px;
+      }
+
+      .page {
+        position: relative;
+        isolation: isolate;
+      }
+
+      .shell {
+        width: min(calc(100% - 2rem), var(--max));
+        margin-inline: auto;
+      }
+
+      .liquid-glass {
+        position: relative;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.01);
+        background-blend-mode: luminosity;
+        border: none;
+        box-shadow:
+          inset 0 1px 1px rgba(255, 255, 255, 0.12),
+          inset 0 -1px 1px rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(9px);
+        -webkit-backdrop-filter: blur(9px);
+      }
+
+      .liquid-glass::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        padding: 1.4px;
+        pointer-events: none;
+        border-radius: inherit;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.45) 0%,
+          rgba(255, 255, 255, 0.15) 20%,
+          rgba(255, 255, 255, 0) 40%,
+          rgba(255, 255, 255, 0) 60%,
+          rgba(255, 255, 255, 0.15) 80%,
+          rgba(255, 255, 255, 0.45) 100%
+        );
+        -webkit-mask:
+          linear-gradient(white 0 0) content-box,
+          linear-gradient(white 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+      }
+
+      .section-label,
+      .micro,
+      .nav-link,
+      .social-label,
+      .stat-label,
+      .chip,
+      .card-kicker,
+      .orbital-button,
+      .footer-line {
+        font-size: 0.75rem;
+        font-weight: 750;
+        line-height: 1.1;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .accent-script {
+        color: var(--neon);
+        font-family: var(--accent-script);
+        font-size: 2.55rem;
+        font-weight: 400;
+        line-height: 0.78;
+        text-transform: none;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 100svh;
+        overflow: hidden;
+        border-end-start-radius: 4.5rem;
+        border-end-end-radius: 4.5rem;
+        background: var(--void);
+      }
+
+      .hero-media {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+      }
+
+      .hero-media::before,
+      .hero-media::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+      }
+
+      .hero-media::before {
+        background:
+          linear-gradient(180deg, oklch(6% 0.04 260 / 0.38), oklch(6% 0.04 260 / 0.84)),
+          radial-gradient(circle at 47% 38%, transparent 0 21rem, oklch(6% 0.04 260 / 0.54) 33rem),
+          url("assets/biomes/pm-nebula.jpg") center / cover;
+        filter: saturate(0.94) contrast(1.16);
+        transform: scale(1.04);
+      }
+
+      .hero-media::after {
+        background:
+          conic-gradient(
+            from 138deg at 50% 47%,
+            transparent,
+            oklch(86% 0.28 134 / 0.16),
+            transparent 16%,
+            oklch(78% 0.13 72 / 0.14),
+            transparent 34%
+          ),
+          radial-gradient(circle at 50% 50%, transparent 0 12rem, oklch(94% 0.02 248 / 0.1) 12.1rem 12.2rem, transparent 12.3rem),
+          radial-gradient(circle at 50% 50%, transparent 0 19rem, oklch(94% 0.02 248 / 0.07) 19.1rem 19.2rem, transparent 19.3rem);
+        mix-blend-mode: screen;
+        opacity: 0.75;
+      }
+
+      .site-header {
+        display: grid;
+        grid-template-columns: minmax(9rem, 1fr) auto minmax(9rem, 1fr);
+        gap: var(--space-lg);
+        align-items: center;
+        padding-block: var(--space-lg);
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 0.22rem;
+        width: fit-content;
+      }
+
+      .brand-name {
+        font-family: var(--display);
+        font-size: 1.45rem;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .brand-role {
+        max-width: 18rem;
+        color: var(--cream-muted);
+      }
+
+      .nav-pill {
+        display: flex;
+        gap: var(--space-xs);
+        align-items: center;
+        justify-content: center;
+        padding: 0.45rem;
+        border-radius: 999px;
+      }
+
+      .nav-link {
+        display: inline-flex;
+        min-height: 2.45rem;
+        align-items: center;
+        justify-content: center;
+        padding-inline: 1.1rem;
+        border-radius: 999px;
+        color: var(--cream-muted);
+        transition:
+          color 220ms var(--ease),
+          background-color 220ms var(--ease);
+      }
+
+      .nav-link:hover {
+        background: oklch(94% 0.025 248 / 0.08);
+        color: var(--cream);
+      }
+
+      .socials {
+        display: flex;
+        gap: var(--space-sm);
+        justify-content: flex-end;
+      }
+
+      .icon-link {
+        display: inline-grid;
+        width: 2.75rem;
+        height: 2.75rem;
+        place-items: center;
+        border-radius: 999px;
+        color: var(--cream);
+        transition:
+          transform 240ms var(--ease),
+          background-color 240ms var(--ease);
+      }
+
+      .icon-link:hover {
+        background: var(--glass-strong);
+        transform: translateY(-2px);
+      }
+
+      .icon-link svg {
+        width: 1.1rem;
+        height: 1.1rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.8;
+      }
+
+      .hero-inner {
+        display: grid;
+        min-height: calc(100svh - 5.7rem);
+        grid-template-rows: 1fr auto;
+        gap: var(--space-3xl);
+        padding-block: var(--space-3xl);
+      }
+
+      .hero-copy {
+        display: grid;
+        align-content: center;
+        gap: var(--space-lg);
+        max-width: 72rem;
+      }
+
+      .hero-title {
+        max-width: 11ch;
+        margin: 0;
+        font-family: var(--display);
+        font-size: 8.4rem;
+        font-weight: 400;
+        line-height: 0.86;
+        text-transform: uppercase;
+      }
+
+      .hero-title span {
+        display: block;
+      }
+
+      .hero-mark {
+        width: fit-content;
+        transform: rotate(-5deg);
+      }
+
+      .hero-deck {
+        display: grid;
+        grid-template-columns: minmax(16rem, 0.92fr) minmax(18rem, 1.4fr) minmax(12rem, 0.72fr);
+        gap: var(--space-lg);
+        align-items: stretch;
+      }
+
+      .deck-panel {
+        display: grid;
+        min-height: 11rem;
+        align-content: space-between;
+        gap: var(--space-lg);
+        padding: var(--space-lg);
+        border-radius: 8px;
+      }
+
+      .deck-panel p {
+        max-width: 56ch;
+        margin: 0;
+        color: var(--cream-muted);
+        font-size: 0.98rem;
+        font-weight: 500;
+        line-height: 1.65;
+      }
+
+      .signal-readout {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+        align-content: end;
+      }
+
+      .chip {
+        display: inline-flex;
+        min-height: 2.15rem;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding-inline: var(--space-md);
+        color: var(--cream);
+        background: oklch(94% 0.02 248 / 0.035);
+      }
+
+      .orbital-meter {
+        position: relative;
+        min-height: 11rem;
+        border-radius: 8px;
+        background:
+          radial-gradient(circle at 50% 50%, transparent 0 3.35rem, oklch(86% 0.28 134 / 0.32) 3.42rem 3.5rem, transparent 3.56rem),
+          radial-gradient(circle at 50% 50%, transparent 0 5rem, oklch(94% 0.02 248 / 0.14) 5.06rem 5.13rem, transparent 5.2rem);
+      }
+
+      .orbital-meter::after {
+        position: absolute;
+        inset: 1.4rem;
+        content: "";
+        border: 1px solid oklch(94% 0.02 248 / 0.15);
+        border-radius: 999px;
+        animation: drift 14s linear infinite;
+        clip-path: polygon(0 0, 62% 0, 62% 100%, 0 100%);
+      }
+
+      .intro {
+        min-height: 100svh;
+        padding-block: var(--space-4xl);
+      }
+
+      .intro-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.86fr) minmax(21rem, 0.64fr);
+        gap: var(--space-2xl);
+        align-items: end;
+      }
+
+      .intro-visual {
+        position: relative;
+        min-height: 39rem;
+        overflow: hidden;
+        border-radius: 8px;
+        background:
+          linear-gradient(180deg, transparent, oklch(6% 0.04 260 / 0.72)),
+          url("assets/biomes/frontend-ocean.jpg") center / cover;
+      }
+
+      .intro-visual::before {
+        position: absolute;
+        inset: var(--space-lg);
+        content: "";
+        border: 1px solid oklch(94% 0.02 248 / 0.18);
+        border-radius: 8px;
+      }
+
+      .intro-title {
+        position: absolute;
+        inset-inline: var(--space-xl);
+        bottom: var(--space-xl);
+        max-width: 46rem;
+      }
+
+      .section-label {
+        color: var(--neon);
+      }
+
+      .section-title {
+        margin: var(--space-sm) 0 0;
+        font-family: var(--display);
+        font-size: 6.4rem;
+        font-weight: 400;
+        line-height: 0.88;
+        text-transform: uppercase;
+      }
+
+      .intro-copy {
+        display: grid;
+        gap: var(--space-lg);
+      }
+
+      .intro-copy p {
+        margin: 0;
+        color: var(--cream-muted);
+        font-size: 1.08rem;
+        font-weight: 500;
+        line-height: 1.72;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+      }
+
+      .stat {
+        display: grid;
+        gap: var(--space-xs);
+        min-height: 8rem;
+        align-content: end;
+        padding: var(--space-lg);
+        border-radius: 8px;
+      }
+
+      .stat-value {
+        font-family: var(--display);
+        font-size: 3.75rem;
+        line-height: 0.9;
+        text-transform: uppercase;
+      }
+
+      .stat-label {
+        color: var(--cream-muted);
+      }
+
+      .decorative-keywords {
+        display: grid;
+        gap: var(--space-sm);
+        margin-top: var(--space-3xl);
+        color: oklch(94% 0.02 248 / 0.12);
+        font-family: var(--display);
+        font-size: 4.2rem;
+        line-height: 0.9;
+        text-transform: uppercase;
+      }
+
+      .decorative-keywords span:nth-child(2) {
+        padding-inline-start: 11rem;
+      }
+
+      .work {
+        padding-block: var(--space-4xl);
+        background:
+          linear-gradient(180deg, transparent, oklch(8% 0.045 252 / 0.82)),
+          var(--void);
+      }
+
+      .work-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: var(--space-xl);
+        align-items: end;
+        margin-bottom: var(--space-2xl);
+      }
+
+      .work-header .section-title {
+        max-width: 9ch;
+      }
+
+      .orbital-button {
+        display: inline-flex;
+        position: relative;
+        min-height: 3.5rem;
+        align-items: center;
+        justify-content: center;
+        padding-inline: var(--space-lg);
+        border-radius: 999px;
+        background: var(--cream);
+        color: var(--void);
+        font-family: var(--body);
+      }
+
+      .orbital-button::after {
+        position: absolute;
+        right: 1.15rem;
+        bottom: 0.52rem;
+        left: 1.15rem;
+        height: 0.2rem;
+        content: "";
+        border-radius: 999px;
+        background: var(--neon);
+      }
+
+      .biome-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--space-md);
+      }
+
+      .biome-card {
+        position: relative;
+        display: grid;
+        min-height: 32rem;
+        overflow: hidden;
+        align-content: end;
+        border-radius: 8px;
+        isolation: isolate;
+        transform: translateY(0);
+        transition:
+          transform 300ms var(--ease),
+          filter 300ms var(--ease);
+      }
+
+      .biome-card:hover {
+        filter: saturate(1.1);
+        transform: translateY(-0.35rem);
+      }
+
+      .biome-card img {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0.78) contrast(1.12);
+        transform: scale(1.04);
+        transition: transform 700ms var(--ease);
+      }
+
+      .biome-card:hover img {
+        transform: scale(1.09);
+      }
+
+      .biome-card::after {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        content: "";
+        background:
+          linear-gradient(180deg, oklch(6% 0.04 260 / 0.1), oklch(6% 0.04 260 / 0.82) 76%),
+          radial-gradient(circle at 20% 20%, var(--card-glow), transparent 18rem);
+      }
+
+      .biome-card-content {
+        display: grid;
+        gap: var(--space-md);
+        padding: var(--space-lg);
+      }
+
+      .card-kicker {
+        color: var(--neon);
+      }
+
+      .card-title {
+        margin: 0;
+        font-family: var(--display);
+        font-size: 2.65rem;
+        font-weight: 400;
+        line-height: 0.96;
+        text-transform: uppercase;
+      }
+
+      .card-copy {
+        min-height: 4.7rem;
+        margin: 0;
+        color: var(--cream-muted);
+        font-size: 0.94rem;
+        font-weight: 500;
+        line-height: 1.55;
+      }
+
+      .project-strip {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: var(--space-sm);
+        align-items: center;
+        padding: var(--space-md);
+        border-radius: 8px;
+      }
+
+      .project-title {
+        overflow-wrap: anywhere;
+        font-size: 0.86rem;
+        font-weight: 750;
+        line-height: 1.25;
+        text-transform: uppercase;
+      }
+
+      .project-meta {
+        color: var(--cream-muted);
+        font-size: 0.75rem;
+        font-weight: 750;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .arrow-button {
+        display: inline-grid;
+        width: 2.45rem;
+        height: 2.45rem;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 999px;
+        background: oklch(86% 0.28 134 / 0.92);
+        color: var(--void);
+      }
+
+      .contact {
+        padding-block: var(--space-4xl) var(--space-2xl);
+      }
+
+      .contact-stage {
+        position: relative;
+        min-height: 45rem;
+        overflow: hidden;
+        border-radius: 8px;
+        background:
+          linear-gradient(180deg, oklch(6% 0.04 260 / 0.05), oklch(6% 0.04 260 / 0.88)),
+          url("assets/biomes/fullstack-city.jpg") center / cover;
+      }
+
+      .contact-stage::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, oklch(6% 0.04 260 / 0.78), transparent 56%),
+          radial-gradient(circle at 76% 22%, oklch(86% 0.28 134 / 0.18), transparent 22rem);
+      }
+
+      .contact-copy {
+        position: absolute;
+        z-index: 1;
+        inset: var(--space-2xl);
+        display: grid;
+        max-width: 64rem;
+        align-content: start;
+        gap: var(--space-lg);
+        padding-top: var(--space-xl);
+      }
+
+      .contact-copy .section-title {
+        max-width: 15ch;
+        font-size: 5rem;
+      }
+
+      .contact-copy p {
+        max-width: 48rem;
+        margin: 0;
+        color: var(--cream-muted);
+        font-size: 1.04rem;
+        font-weight: 500;
+        line-height: 1.68;
+      }
+
+      .contact-stack {
+        position: absolute;
+        z-index: 2;
+        bottom: var(--space-2xl);
+        left: var(--space-2xl);
+        display: grid;
+        gap: var(--space-sm);
+      }
+
+      .contact-link {
+        display: grid;
+        grid-template-columns: 2.75rem 1fr;
+        gap: var(--space-sm);
+        align-items: center;
+        width: min(21rem, calc(100vw - 4rem));
+        padding: var(--space-xs);
+        border-radius: 999px;
+      }
+
+      .contact-link .icon-link {
+        width: 2.45rem;
+        height: 2.45rem;
+      }
+
+      .social-label {
+        overflow: hidden;
+        color: var(--cream);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .footer {
+        display: flex;
+        gap: var(--space-lg);
+        align-items: center;
+        justify-content: space-between;
+        padding-block: var(--space-xl);
+        color: var(--cream-muted);
+      }
+
+      .footer-line {
+        display: inline-flex;
+        gap: var(--space-sm);
+        align-items: center;
+      }
+
+      .pulse-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 999px;
+        background: var(--neon);
+        box-shadow: 0 0 1.4rem oklch(86% 0.28 134 / 0.75);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(1.25rem);
+        transition:
+          opacity 700ms var(--ease),
+          transform 700ms var(--ease);
+      }
+
+      .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @keyframes drift {
+        to {
+          transform: rotate(1turn);
+        }
+      }
+
+      @media (max-width: 1180px) {
+        .site-header {
+          grid-template-columns: 1fr auto;
+        }
+
+        .nav-pill {
+          display: none;
+        }
+
+        .socials {
+          justify-content: flex-end;
+        }
+
+        .hero-title {
+          font-size: 6.5rem;
+        }
+
+        .hero-deck,
+        .intro-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .deck-panel:nth-child(2) {
+          grid-column: 1 / -1;
+          order: 3;
+        }
+
+        .biome-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 780px) {
+        .shell {
+          width: min(calc(100% - 1rem), var(--max));
+        }
+
+        .hero {
+          border-end-start-radius: 2rem;
+          border-end-end-radius: 2rem;
+        }
+
+        .site-header {
+          grid-template-columns: 1fr;
+          gap: var(--space-md);
+        }
+
+        .socials {
+          justify-content: flex-start;
+        }
+
+        .hero-inner {
+          min-height: auto;
+          padding-block: var(--space-xl) var(--space-3xl);
+        }
+
+        .hero-copy {
+          min-height: 48svh;
+        }
+
+        .hero-title {
+          font-size: 4.15rem;
+          line-height: 0.9;
+        }
+
+        .accent-script {
+          font-size: 2.05rem;
+        }
+
+        .hero-deck,
+        .intro-grid,
+        .work-header,
+        .biome-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .deck-panel:nth-child(2) {
+          grid-column: auto;
+          order: initial;
+        }
+
+        .intro,
+        .work,
+        .contact {
+          padding-block: var(--space-3xl);
+        }
+
+        .intro-visual {
+          min-height: 32rem;
+        }
+
+        .intro-title {
+          inset-inline: var(--space-lg);
+          bottom: var(--space-lg);
+        }
+
+        .section-title {
+          font-size: 4.2rem;
+        }
+
+        .decorative-keywords {
+          overflow: hidden;
+          font-size: 2.55rem;
+        }
+
+        .decorative-keywords span:nth-child(2) {
+          padding-inline-start: 2rem;
+        }
+
+        .biome-card {
+          min-height: 29rem;
+        }
+
+        .contact-stage {
+          min-height: 42rem;
+        }
+
+        .contact-copy {
+          inset: var(--space-lg);
+          align-content: start;
+          padding-top: var(--space-xl);
+        }
+
+        .contact-copy .section-title {
+          max-width: 9ch;
+          font-size: 3.7rem;
+        }
+
+        .contact-stack {
+          right: var(--space-lg);
+          bottom: var(--space-lg);
+          left: var(--space-lg);
+        }
+
+        .footer {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .hero-title {
+          font-size: 3.45rem;
+        }
+
+        .section-title {
+          font-size: 3.35rem;
+        }
+
+        .card-title {
+          font-size: 2.25rem;
+        }
+
+        .project-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .arrow-button {
+          display: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+        }
+
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section id="home" class="hero" aria-labelledby="hero-title">
+        <div class="hero-media" aria-hidden="true"></div>
+        <header class="site-header shell">
+          <a class="brand" href="#home" aria-label="Yeseul Lee home">
+            <span class="brand-name">Yeseul Lee</span>
+            <span class="brand-role micro">Frontend Dev / Product Builder</span>
+          </a>
+          <nav class="nav-pill liquid-glass" aria-label="Primary navigation">
+            <a class="nav-link" href="#signal">Manifesto</a>
+            <a class="nav-link" href="#biomes">Fields</a>
+            <a class="nav-link" href="#connect">Connect</a>
+            <a class="nav-link" href="#biomes">Projects</a>
+            <a class="nav-link" href="#signal">Concept</a>
+          </nav>
+          <div class="socials" aria-label="Social links">
+            <a class="icon-link liquid-glass" href="mailto:vxlmlxv@gmail.com" aria-label="Email Yeseul Lee">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 6h16v12H4z" />
+                <path d="m4 7 8 6 8-6" />
+              </svg>
+            </a>
+            <a class="icon-link liquid-glass" href="https://www.linkedin.com/in/ye-seul-lee-b62298295" aria-label="LinkedIn profile">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M16 8a6 6 0 0 1 6 6v6h-4v-6a2 2 0 0 0-4 0v6h-4V9h4v2" />
+                <path d="M2 9h4v11H2z" />
+                <path d="M4 4.5v.01" />
+              </svg>
+            </a>
+            <a class="icon-link liquid-glass" href="https://github.com/vxlmlxv" aria-label="GitHub profile">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5a4.5 4.5 0 0 0-1.2-3.1A4.2 4.2 0 0 0 18.7 3s-1-.3-3.3 1.2a11.4 11.4 0 0 0-6 0C7.1 2.7 6.1 3 6.1 3A4.2 4.2 0 0 0 6 5.9 4.5 4.5 0 0 0 4.8 9c0 3.5 3 5.5 6 5.5a4.8 4.8 0 0 0-1 3.5v4" />
+                <path d="M9 18c-4.5 2-5-2-7-2" />
+              </svg>
+            </a>
+          </div>
+        </header>
+
+        <div class="hero-inner shell">
+          <div class="hero-copy reveal">
+            <div class="hero-mark accent-script">Interface observatory</div>
+            <h1 id="hero-title" class="hero-title">
+              <span>Building</span>
+              <span>clear</span>
+              <span>digital</span>
+              <span>worlds</span>
+            </h1>
+          </div>
+          <div class="hero-deck">
+            <aside class="deck-panel liquid-glass reveal" aria-label="Role">
+              <span class="section-label">Current signal</span>
+              <p>Frontend Developer &amp; Product-Minded Builder</p>
+            </aside>
+            <aside class="deck-panel liquid-glass reveal" aria-label="Portfolio statement">
+              <span class="section-label">Field note</span>
+              <p>Exploration of product systems. Merging code, aesthetics, and interaction into interfaces that stay readable under complexity.</p>
+            </aside>
+            <aside class="orbital-meter liquid-glass reveal" aria-label="Orbital visual marker"></aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="signal" class="intro shell" aria-labelledby="intro-title">
+        <div class="intro-grid">
+          <div class="intro-visual reveal">
+            <div class="intro-title">
+              <span class="section-label">The Concept</span>
+              <h2 id="intro-title" class="section-title">A website is not just a page.</h2>
+              <div class="accent-script">It is a world</div>
+            </div>
+          </div>
+          <div class="intro-copy reveal">
+            <p>Just as the earth is composed of vast oceans, towering mountains, and complex cities, this portfolio maps skills as terrain: frontend depth, design elevation, full-stack structure, and project orchestration.</p>
+            <p>Select a field to inspect how each discipline contributes to a clearer product system.</p>
+            <div class="stats" aria-label="Profile stats">
+              <div class="stat liquid-glass">
+                <span class="stat-value">8+</span>
+                <span class="stat-label">Team Projects</span>
+              </div>
+              <div class="stat liquid-glass">
+                <span class="stat-value">React</span>
+                <span class="stat-label">TypeScript / Figma / Product Thinking</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="decorative-keywords" aria-hidden="true">
+          <span>Frontend / Architecture / Motion / Interaction</span>
+          <span>Design Systems / Clarity / Product Flow</span>
+          <span>Fullstack / Planning / Interfaces / Worlds</span>
+        </div>
+      </section>
+
+      <section id="biomes" class="work" aria-labelledby="work-title">
+        <div class="shell">
+          <div class="work-header reveal">
+            <div>
+              <span class="section-label">Signal Fields</span>
+              <h2 id="work-title" class="section-title">Four fields of work</h2>
+              <div class="accent-script">Observed terrain</div>
+            </div>
+            <a class="orbital-button" href="#connect">Open Contact Channel</a>
+          </div>
+          <div class="biome-grid" id="biome-grid" aria-label="Biome project categories"></div>
+        </div>
+      </section>
+
+      <section id="connect" class="contact shell" aria-labelledby="contact-title">
+        <div class="contact-stage reveal">
+          <div class="contact-copy">
+            <div class="accent-script">Further signals</div>
+            <h2 id="contact-title" class="section-title">Ready to build the next world?</h2>
+            <p>Open to conversations around frontend systems, immersive interaction, product clarity, and digital experiences where craft and engineering share the same surface.</p>
+          </div>
+          <div class="contact-stack" aria-label="Contact links">
+            <a class="contact-link liquid-glass" href="mailto:vxlmlxv@gmail.com">
+              <span class="icon-link" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6h16v12H4z" />
+                  <path d="m4 7 8 6 8-6" />
+                </svg>
+              </span>
+              <span class="social-label">vxlmlxv@gmail.com</span>
+            </a>
+            <a class="contact-link liquid-glass" href="https://www.linkedin.com/in/ye-seul-lee-b62298295">
+              <span class="icon-link" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M16 8a6 6 0 0 1 6 6v6h-4v-6a2 2 0 0 0-4 0v6h-4V9h4v2" />
+                  <path d="M2 9h4v11H2z" />
+                  <path d="M4 4.5v.01" />
+                </svg>
+              </span>
+              <span class="social-label">LinkedIn</span>
+            </a>
+            <a class="contact-link liquid-glass" href="https://github.com/vxlmlxv">
+              <span class="icon-link" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5a4.5 4.5 0 0 0-1.2-3.1A4.2 4.2 0 0 0 18.7 3s-1-.3-3.3 1.2a11.4 11.4 0 0 0-6 0C7.1 2.7 6.1 3 6.1 3A4.2 4.2 0 0 0 6 5.9 4.5 4.5 0 0 0 4.8 9c0 3.5 3 5.5 6 5.5a4.8 4.8 0 0 0-1 3.5v4" />
+                  <path d="M9 18c-4.5 2-5-2-7-2" />
+                </svg>
+              </span>
+              <span class="social-label">GitHub</span>
+            </a>
+          </div>
+        </div>
+        <footer class="footer">
+          <span class="footer-line"><span class="pulse-dot" aria-hidden="true"></span>Local Time: <span id="local-time">--:--</span></span>
+          <span class="footer-line">© 2026 Hello World / standalone concept page</span>
+        </footer>
+      </section>
+    </main>
+
+    <script>
+      const biomes = [
+        {
+          title: "The Deep Ocean",
+          role: "Frontend Dev",
+          desc: "Immersive frontend experiences with fluid animations and responsive architectures.",
+          image: "assets/biomes/frontend-ocean.jpg",
+          glow: "oklch(62% 0.14 230 / 0.26)",
+          project: "Liquid Finance",
+          meta: "React / Three.js"
+        },
+        {
+          title: "Concrete City",
+          role: "Fullstack Eng",
+          desc: "Robust, scalable architectures built on solid foundations.",
+          image: "assets/biomes/fullstack-city.jpg",
+          glow: "oklch(58% 0.13 308 / 0.24)",
+          project: "Urban API",
+          meta: "Node / PostgreSQL"
+        },
+        {
+          title: "Silent Mountain",
+          role: "UI/UX Design",
+          desc: "Minimalist UI/UX design focused on clarity, elevation, and user peace.",
+          image: "assets/biomes/design-mountain.jpg",
+          glow: "oklch(58% 0.12 158 / 0.24)",
+          project: "Peak Wellness",
+          meta: "Figma / Principle"
+        },
+        {
+          title: "Nebula Core",
+          role: "Project Mgmt",
+          desc: "Orchestrating complex systems and teams across the digital universe.",
+          image: "assets/biomes/pm-nebula.jpg",
+          glow: "oklch(61% 0.15 21 / 0.25)",
+          project: "Project Starship",
+          meta: "Jira / Agile"
+        }
+      ];
+
+      const grid = document.querySelector("#biome-grid");
+
+      grid.innerHTML = biomes
+        .map(
+          (biome) => `
+            <article class="biome-card liquid-glass reveal" style="--card-glow: ${biome.glow}">
+              <img src="${biome.image}" alt="" loading="lazy" />
+              <div class="biome-card-content">
+                <span class="card-kicker">${biome.role}</span>
+                <h3 class="card-title">${biome.title}</h3>
+                <p class="card-copy">${biome.desc}</p>
+                <div class="project-strip liquid-glass" aria-label="Representative project">
+                  <div>
+                    <div class="project-title">${biome.project}</div>
+                    <div class="project-meta">${biome.meta}</div>
+                  </div>
+                  <span class="arrow-button" aria-hidden="true">↗</span>
+                </div>
+              </div>
+            </article>
+          `
+        )
+        .join("");
+
+      const localTime = document.querySelector("#local-time");
+
+      function updateTime() {
+        localTime.textContent = new Intl.DateTimeFormat("en", {
+          timeZone: "Asia/Seoul",
+          hour: "2-digit",
+          minute: "2-digit"
+        }).format(new Date());
+      }
+
+      updateTime();
+      setInterval(updateTime, 30000);
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (!reduceMotion) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.14 }
+        );
+
+        document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
+
+        const hero = document.querySelector(".hero");
+        const media = document.querySelector(".hero-media");
+
+        hero.addEventListener("pointermove", (event) => {
+          const rect = hero.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          media.style.transform = `translate(${x * 14}px, ${y * 10}px)`;
+        });
+      } else {
+        document.querySelectorAll(".reveal").forEach((item) => item.classList.add("is-visible"));
+      }
+    </script>
+  </body>
+</html>
