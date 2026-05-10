@@ -7,6 +7,7 @@ import ContactSection from "./ContactSection";
 import Loader from "./Loader";
 import ManifestoSection from "./ManifestoSection";
 import Navigation from "./Navigation";
+import SelectedWorkSection from "./SelectedWorkSection";
 import ThreeScene from "./3d/ThreeScene";
 import BiomeListSection from "./biomes/BiomeListSection";
 import HeroSection from "./hero/HeroSection";
@@ -278,6 +279,7 @@ export default function PortfolioExperience() {
           onScrollToAbout={() => scrollToId("about")}
         />
         <ManifestoSection language={language} />
+        <SelectedWorkSection language={language} />
         <BiomeListSection
           language={language}
           onHoverBiome={handleBiomeEnter}
