@@ -33,6 +33,11 @@ export default function ContactSection({
             {profile.contact.highlight}
           </span>
         </h2>
+        {profile.contact.description ? (
+          <p className="mb-10 max-w-2xl text-base leading-relaxed text-gray-400 md:text-lg">
+            {profile.contact.description}
+          </p>
+        ) : null}
         <div className="flex flex-col gap-8 md:flex-row md:gap-16">
           {profile.contact.links.map((link) => (
             <a
